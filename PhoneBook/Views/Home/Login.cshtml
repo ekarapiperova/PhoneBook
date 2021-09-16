@@ -1,0 +1,68 @@
+﻿@model PhoneBook.ViewModels.Home.LoginVM
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+</head>
+<body>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <h1 style="font-size:26px;">Phone Book</h1>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ul style="list-style:none;">
+                        <li style="float:left; width:150px; text-decoration:none; color:black;"><a href="@Url.Action("Index", "Contacts")">Manage Contacts</a></li>
+                        <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Index", "Users")">Manage Users</a></li>
+                        @if (PhoneBook.Models.AuthenticationManager.LoggedUser == null)
+                        {
+                            <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Login", "Home")">Login</a></li>
+                        }
+                        else
+                        {
+                            <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Logout", "Home")">Logout</a></li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @using (Html.BeginForm("Login", "Home", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        <fieldset>
+                            <legend>Login</legend>
+                            @Html.ValidationMessage("authenticationFailed", new { style="color: red;" })
+                            <table>
+                                <tr>
+                                    <td>@Html.LabelFor(model => model.Username)</td>
+                                    <td>@Html.TextBoxFor(model => model.Username) @Html.ValidationMessageFor(model => model.Username, null, new { style="color: red;" })</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.LabelFor(model => model.Password)</td>
+                                    <td>@Html.PasswordFor(model => model.Password) @Html.ValidationMessageFor(model => model.Password, null, new { style = "color: red;" })</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><input type="submit" value="Login" /></td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

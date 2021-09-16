@@ -1,0 +1,47 @@
+﻿@model PhoneBook.ViewModels.Home.LoginVM
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+</head>
+<body>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <h1 style="font-size:26px;">Phone Book</h1>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ul style="list-style:none;">
+                        <li style="float:left; width:150px; text-decoration:none; color:black;"><a href="@Url.Action("Index", "Contacts")">Manage Contacts</a></li>
+                        <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Index", "Users")">Manage Users</a></li>
+                        @if (PhoneBook.Models.AuthenticationManager.LoggedUser == null)
+                        {
+                            <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Login", "Home")">Login</a></li>
+                        }
+                        else
+                        {
+                            <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Logout", "Home")">Logout</a></li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Welcome to our Phone Book web application.</p>
+                    <p>You can navigate to the different sections of the website using the menu above.</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

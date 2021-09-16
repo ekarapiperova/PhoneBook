@@ -1,0 +1,69 @@
+﻿@model PhoneBook.ViewModels.Contacts.EditVM
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+</head>
+<body>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <h1 style="font-size:26px;">Phone Book</h1>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ul style="list-style:none;">
+                        <li style="float:left; width:150px; text-decoration:none; color:black;"><a href="@Url.Action("Index", "Contacts")">Manage Contacts</a></li>
+                        <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Index", "Users")">Manage Users</a></li>
+                        @if (PhoneBook.Models.AuthenticationManager.LoggedUser == null)
+                        {
+                            <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Login", "Home")">Login</a></li>
+                        }
+                        else
+                        {
+                            <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Logout", "Home")">Logout</a></li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @using (Html.BeginForm("Edit", "Contacts", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        @Html.HiddenFor(model => model.Id)
+                        @Html.HiddenFor(model => model.UserId)
+                        <fieldset>
+                            <legend>@(Model.Id > 0 ? "Edit" : "New") Contact</legend>
+                            <table>
+                                <tr>
+                                    <td>@Html.LabelFor(model => model.FullName)</td>
+                                    <td>@Html.TextBoxFor(model => model.FullName) @Html.ValidationMessageFor(model => model.FullName)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.LabelFor(model => model.Email)</td>
+                                    <td>@Html.TextBoxFor(model => model.Email) @Html.ValidationMessageFor(model => model.Email)</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><input type="submit" value="Save" />&nbsp;<a href="@Url.Action("Index", "Contacts")">Cancel</a></td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

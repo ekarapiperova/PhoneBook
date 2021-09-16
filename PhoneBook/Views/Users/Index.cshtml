@@ -1,0 +1,116 @@
+﻿@model PhoneBook.ViewModels.Users.IndexVM
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <title>Login</title>
+</head>
+<body>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <h1 style="font-size:26px;">Phone Book</h1>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ul style="list-style:none;">
+                        <li style="float:left; width:150px; text-decoration:none; color:black;"><a href="@Url.Action("Index", "Contacts")">Manage Contacts</a></li>
+                        <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Index", "Users")">Manage Users</a></li>
+                        @if (PhoneBook.Models.AuthenticationManager.LoggedUser == null)
+                        {
+                            <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Login", "Home")">Login</a></li>
+                        }
+                        else
+                        {
+                            <li style="float: left; width: 150px; text-decoration: none; color: black;"><a href="@Url.Action("Logout", "Home")">Logout</a></li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <form action="/Users/Index" method="get">
+                        @Html.LabelFor(model => model.Filter.Username)
+                        @Html.TextBoxFor(model => model.Filter.Username)
+                        @Html.LabelFor(model => model.Filter.FirstName)
+                        @Html.TextBoxFor(model => model.Filter.FirstName)
+                        @Html.LabelFor(model => model.Filter.LastName)
+                        @Html.TextBoxFor(model => model.Filter.LastName)
+                        <input type="submit" value="Search" />
+                    </form>
+                    <a href="@Url.Action("Edit", "Users")">Create new</a>
+                    <table>
+                        <tr>
+                            <td>Username</td>
+                            <td>First Name</td>
+                            <td>Last Name</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@item.Username</td>
+                                <td>@item.FirstName</td>
+                                <td>@item.LastName</td>
+                                <td><a href="@Url.Action("Edit", "Users", new { Id = item.Id})">edit</a></td>
+                                <td><a href="@Url.Action("Delete", "Users", new { Id = item.Id})">delete</a></td>
+                            </tr>
+                        }
+                    </table>
+                    @{
+                        string pageLink = "?";
+                        for (int i = 0; i < this.Request.QueryString.Count; i++)
+                        {
+                            if (this.Request.QueryString.GetKey(i) != "Pager.Page")
+                            {
+                                pageLink += this.Request.QueryString.GetKey(i) + "=" + Url.Encode(this.Request.QueryString[i]) + "&";
+                            }
+                        }
+                    }
+                    <ul style="list-style-type:none;">
+                        @for (int i = 0; i < Model.Pager.PagesCount; i++)
+                        {
+                            <li style="float:left; margin:0 5px;">
+                                <a href="/@this.ViewContext.RouteData.Values["controller"]/@this.ViewContext.RouteData.Values["action"]@Html.Raw(pageLink)Pager.Page=@(i+1)" style="text-decoration:none; font-weight:@(Model.Pager.Page == (i+1) ? "bold" : "normal")">@(i+1)</a>
+                            </li>
+                        }
+                    </ul>
+                    <script>
+                        function ddlItemsPerpage_OnChange() {
+                            @{
+                                string itemsPerPageLink = "?";
+                                for (int i = 0; i < this.Request.QueryString.Count; i++)
+                                {
+                                    if (!this.Request.QueryString.GetKey(i).StartsWith("Pager"))
+                                    {
+                                        itemsPerPageLink += this.Request.QueryString.GetKey(i) + "=" + Url.Encode(this.Request.QueryString[i]) + "&";
+                                    }
+                                }
+                            }
+
+                            var link = "/@this.ViewContext.RouteData.Values["controller"]/@this.ViewContext.RouteData.Values["action"]@Html.Raw(itemsPerPageLink)" + "Pager.ItemsPerPage=" + $("#ddlItemsPerpage").val();
+
+                            window.location.href = link;
+                        }
+                    </script>
+                    <select id="ddlItemsPerpage" onchange="ddlItemsPerpage_OnChange();">
+                        <option value="10" @(Model.Pager.ItemsPerPage == 10 ? "selected" : "")>10</option>
+                        <option value="50" @(Model.Pager.ItemsPerPage == 50 ? "selected" : "")>50</option>
+                        <option value="100" @(Model.Pager.ItemsPerPage == 100 ? "selected" : "")>100</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
